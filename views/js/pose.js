@@ -1,6 +1,7 @@
 var h = 600;
 var w = 1200;
 var sum;
+var pos;
 video = document.getElementById("video");
 video.height = 500;
 video.width = 500;
@@ -23,13 +24,16 @@ function posenet() {
     try {
       sum = parseInt(results[0]["pose"]["nose"]["x"]);
       sum = scale(sum, 0, 500, 0, 1100);
+      console.log(sum);
     } catch {
       console.log("player not in camera or smth");
     }
-    if (results != undefined && sum != undefined) {
+    if (results != undefined && sum != undefined && results.length != 0) {
       if (results[0].pose.score > 0.3) {
-        dc.send(["tileposition", sum]);
-        UpdateTilePosition(true, sum);
+        try {
+          dc.send(["tileposition", sum]);
+        } catch {}
+        UpdateSelfTilePosition(sum);
       }
     }
   });
@@ -40,13 +44,21 @@ ball = new PIXI.Graphics();
 tile = new PIXI.Graphics();
 tile2 = new PIXI.Graphics();
 
-function UpdateTilePosition(new_position) {
-  pos = initer ? h - 50 - 20 : 50;
+function UpdateSelfTilePosition(new_position) {
+  pos = initer ? 50 : h - 50 - 20;
   tile.clear();
   tile.beginFill(0xffffff);
   tile.lineStyle(1, 0);
   tile.drawRect(new_position, pos, 50, 20);
   app.stage.addChild(tile);
+}
+function UpdateOtherTilePosition(new_position) {
+  pos = initer ? h - 50 - 20 : 50;
+  tile2.clear();
+  tile2.beginFill(0xffffff);
+  tile2.lineStyle(1, 0);
+  tile2.drawRect(new_position, pos, 50, 20);
+  app.stage.addChild(tile2);
 }
 function scale(number, inMin, inMax, outMin, outMax) {
   return ((number - inMin) * (outMax - outMin)) / (inMax - inMin) + outMin;
@@ -114,7 +126,7 @@ function rsdata() {
       updateball(eval(data[1]), eval(data[2]));
     }
     if (data[0] == "tileposition") {
-      UpdateTilePosition(data[1]);
+      UpdateOtherTilePosition(data[1]);
     }
   };
 }
