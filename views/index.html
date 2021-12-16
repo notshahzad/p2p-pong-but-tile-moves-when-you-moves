@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <p>
+      first connect then press space on the initiator side then play(rip gramur)
+    </p>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="./js/m15.min.js"></script>
+    <script src="./js/pixi.min.js"></script>
+    <input type="text" value="1234" id="room" />
+    <video id="video"></video>
+    <script src="./js/connection.js"></script>
+    <script src="./js/pose.js"></script>
+    <input
+      type="button"
+      value="connect"
+      onclick="SendRoom()"
+      id="connectbutton"
+    />
+    <input type="button" value="play?" onclick="VideoStream()" />
+  </body>
+</html>
