@@ -24,9 +24,7 @@ function posenet() {
     try {
       sum = parseInt(results[0]["pose"]["nose"]["x"]);
       sum = scale(sum, 0, 500, 0, 1100);
-    } catch {
-      console.log("player not in camera or smth");
-    }
+    } catch {}
     if (results != undefined && sum != undefined && results.length != 0) {
       if (results[0].pose.score > 0.3) {
         try {
@@ -78,43 +76,30 @@ function genrateball(initialposx, initialposy, speedx, speedy) {
       updateball(initialposx, initialposy);
       //if initer tile niche
       if (initialposx > sum && initialposx < sum + 50)
-        console.log("same x axis");
-      if (
-        initialposx > sum &&
-        initialposx < sum + 50 &&
-        initialposy + 10 == selfpos
-      )
-        speedy *= -1;
+        if (
+          initialposx > sum &&
+          initialposx < sum + 50 &&
+          initialposy + 10 == selfpos
+        )
+          speedy *= -1;
       dc.send(["ballposition", initialposx, initialposy, speedx, speedy]);
     }
     if (initialposy >= h - 10 || initialposy == 0) speedy *= -1;
     if (initialposx >= w - 10 || initialposx <= 0) speedx *= -1;
     if (!initer && initialposy <= 300) {
-      console.log(initialposx, sum);
       initialposy += speedy;
       initialposx += speedx;
       updateball(initialposx, initialposy);
       if (initialposx > sum && initialposx < sum + 50)
-        console.log("same x Axies", initialposy, selfpos);
-      if (
-        initialposx > sum &&
-        initialposx < sum + 50 &&
-        initialposy == selfpos + 20
-      )
-        speedy *= -1;
+        if (
+          initialposx > sum &&
+          initialposx < sum + 50 &&
+          initialposy == selfpos + 20
+        )
+          speedy *= -1;
       dc.send(["ballposition", initialposx, initialposy, speedx, speedy]);
     }
   });
-
-  // speedx = speedy = 1;
-  // if(initer == false){
-  //   speedx = speedy *= -1
-  // }
-  // ballhw = 10;       //more like square
-  //  app.ticker.add(()=>{
-  //    updateball(position_x,position_y)
-  //    if(position_y < ) position_x+=speedx,position_y+=speedy;
-  // })
 }
 function updateball(position_x, position_y) {
   ball.clear();
