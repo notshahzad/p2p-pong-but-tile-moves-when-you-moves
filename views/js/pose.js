@@ -24,7 +24,6 @@ function posenet() {
     try {
       sum = parseInt(results[0]["pose"]["nose"]["x"]);
       sum = scale(sum, 0, 500, 0, 1100);
-      console.log(sum);
     } catch {
       console.log("player not in camera or smth");
     }
@@ -45,15 +44,15 @@ tile = new PIXI.Graphics();
 tile2 = new PIXI.Graphics();
 
 function UpdateSelfTilePosition(new_position) {
-  pos = initer ? 50 : h - 50 - 20;
+  selfpos = initer ? h - 50 - 20 : 50;
   tile.clear();
   tile.beginFill(0xffffff);
   tile.lineStyle(1, 0);
-  tile.drawRect(new_position, pos, 50, 20);
+  tile.drawRect(new_position, selfpos, 50, 20);
   app.stage.addChild(tile);
 }
 function UpdateOtherTilePosition(new_position) {
-  pos = initer ? h - 50 - 20 : 50;
+  pos = initer ? 50 : h - 50 - 20;
   tile2.clear();
   tile2.beginFill(0xffffff);
   tile2.lineStyle(1, 0);
@@ -74,25 +73,33 @@ function startgame() {
 function genrateball(initialposx, initialposy, speedx, speedy) {
   app.ticker.add(() => {
     if (initer && initialposy >= 300) {
-      console.log(initialposx, initialposy);
       initialposy += speedy;
       initialposx += speedx;
       updateball(initialposx, initialposy);
       //if initer tile niche
-      if (initialposx > sum && initialposx < sum + 50 && initialposy == pos)
+      if (initialposx > sum && initialposx < sum + 50)
+        console.log("same x axis");
+      if (
+        initialposx > sum &&
+        initialposx < sum + 50 &&
+        initialposy + 10 == selfpos
+      )
         speedy *= -1;
       dc.send(["ballposition", initialposx, initialposy, speedx, speedy]);
     }
     if (initialposy >= h - 10 || initialposy == 0) speedy *= -1;
     if (initialposx >= w - 10 || initialposx <= 0) speedx *= -1;
     if (!initer && initialposy <= 300) {
+      console.log(initialposx, sum);
       initialposy += speedy;
       initialposx += speedx;
       updateball(initialposx, initialposy);
+      if (initialposx > sum && initialposx < sum + 50)
+        console.log("same x Axies", initialposy, selfpos);
       if (
         initialposx > sum &&
         initialposx < sum + 50 &&
-        initialposy == pos + 20
+        initialposy == selfpos + 20
       )
         speedy *= -1;
       dc.send(["ballposition", initialposx, initialposy, speedx, speedy]);
